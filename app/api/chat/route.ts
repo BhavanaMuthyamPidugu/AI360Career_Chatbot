@@ -49,7 +49,7 @@ export async function POST(req: NextRequest) {
     const hits = retrieve(last, 6); // returns array of {id, text}
 
     // Local deterministic answer
-    const local = synthesizeAnswer(last, profile, hits);
+    const local = await synthesizeAnswer(last, profile, hits);
 
     // Try to polish with Gemini if key present (non-blocking)
     const polished = await tryGeminiPolish(local);
