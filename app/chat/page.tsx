@@ -52,9 +52,14 @@ function parseToElements(text?: string) {
       flushList();
       const level = line.match(/^#+/)[0].length;
       const content = line.replace(/^#+\s/, '');
-      const Tag = `h${level + 3}`; // h4, h5, h6
-      elements.push(<Tag key={`header-${index}`} className="font-semibold text-gray-800 my-3">{content}</Tag>);
-    } else {
+      const Tag = `h${level + 3}` as keyof JSX.IntrinsicElements; // 👈 fix
+      elements.push(
+        <Tag key={`header-${index}`} className="font-semibold text-gray-800 my-3">
+          {content}
+        </Tag>
+      );
+    }
+     else {
       flushList();
       elements.push(<p key={`p-${index}`} className="my-2" dangerouslySetInnerHTML={{ __html: line }} />);
     }
