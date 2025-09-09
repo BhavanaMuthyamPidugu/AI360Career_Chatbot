@@ -1,11 +1,15 @@
 {
   "compilerOptions": {
+    "jsx": "react-jsx",
+    "types": ["react"],
+    "lib": ["dom", "esnext"],
+    "moduleResolution": "node",
     "target": "ES2020",
-    "lib": [
-      "dom",
-      "dom.iterable",
-      "esnext"
-    ],
+    // "lib": [
+    //   "dom",
+    //   "dom.iterable",
+    //   "esnext"
+    // ],
     "allowJs": true,
     "skipLibCheck": true,
     "strict": false,
@@ -13,10 +17,10 @@
     "noEmit": true,
     "esModuleInterop": true,
     "module": "esnext",
-    "moduleResolution": "bundler",
+    // "moduleResolution": "bundler",
     "resolveJsonModule": true,
     "isolatedModules": true,
-    "jsx": "preserve",
+    // "jsx": "preserve",
     "baseUrl": ".",
     "paths": {
       "@/*": [

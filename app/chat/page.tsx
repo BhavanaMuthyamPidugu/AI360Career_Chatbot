@@ -1,5 +1,8 @@
 'use client';
 import { useEffect, useRef, useState } from "react";
+import type { ElementType } from "react";
+
+import React from "react";
 import { 
   Bot, 
   Plus, 
@@ -25,12 +28,9 @@ type Msg = { role: "user" | "assistant"; content: string };
 function parseToElements(text?: string) {
   if (!text) return null;
 
-  // Replace markdown-like bolding (**text**) with <strong> tags
-  const formattedText = text.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
-
-  const lines = formattedText.split('\n').filter(line => line.trim() !== '');
-  const elements = [];
-  let listItems = [];
+  const lines = text.split("\n").filter(line => line.trim() !== "");
+  const elements: JSX.Element[] = [];
+  let listItems: string[] = [];
 
   const flushList = () => {
     if (listItems.length > 0) {
@@ -46,22 +46,30 @@ function parseToElements(text?: string) {
   };
 
   lines.forEach((line, index) => {
-    if (line.trim().startsWith('- ') || line.trim().startsWith('* ')) {
+    if (line.trim().startsWith("- ") || line.trim().startsWith("* ")) {
       listItems.push(line.trim().substring(2));
     } else if (/^#{1,3}\s/.test(line.trim())) {
       flushList();
-      const level = line.match(/^#+/)[0].length;
-      const content = line.replace(/^#+\s/, '');
-      const Tag = `h${level + 3}` as keyof JSX.IntrinsicElements; // 👈 fix
+      const level = line.match(/^#+/)![0].length;
+      const content = line.replace(/^#+\s/, "");
+      // const Tag = `h${level + 3}` as keyof JSX.IntrinsicElements; // h4, h5, h6
+      const Tag = (`h${level + 3}` as unknown) as ElementType;
       elements.push(
-        <Tag key={`header-${index}`} className="font-semibold text-gray-800 my-3">
-          {content}
-        </Tag>
+        React.createElement(
+          Tag,
+          { key: `header-${index}`, className: "font-semibold text-gray-800 my-3" },
+          content
+        )
       );
-    }
-     else {
+    } else {
       flushList();
-      elements.push(<p key={`p-${index}`} className="my-2" dangerouslySetInnerHTML={{ __html: line }} />);
+      elements.push(
+        <p
+          key={`p-${index}`}
+          className="my-2"
+          dangerouslySetInnerHTML={{ __html: line }}
+        />
+      );
     }
   });
 
